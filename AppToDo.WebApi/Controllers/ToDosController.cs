@@ -25,5 +25,18 @@ namespace AppToDo.WebApi.Controllers
 
         [HttpGet]
         public async Task<List<ToDo>> GetAll() => await _toDoListService.GetAll();
+        
+        [HttpPost]
+        public async Task<ToDo> Post(ToDo toDo)
+        {
+            if (ModelState.IsValid)
+            {
+               return await _toDoListService.Add(toDo);
+
+            }
+
+            return null;
+
+        }
     }
 }

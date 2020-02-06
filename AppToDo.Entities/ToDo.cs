@@ -10,13 +10,14 @@ namespace AppToDo.Entities
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Task name is required.")]
+        [StringLength(15, ErrorMessage = "Name is too long.", MinimumLength =3)]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="Status is required.")]
         public string Status { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Due Date is required.")]
         public DateTime DueDate { get; set; }
     }
 }

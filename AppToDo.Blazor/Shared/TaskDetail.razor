@@ -9,45 +9,58 @@
             </div>
             <div class="modal-body">
                 <EditForm Model="@TaskObjec" OnValidSubmit="@HandleValidSubmit">
+                    <DataAnnotationsValidator></DataAnnotationsValidator>
+                    @*<ValidationSummary></ValidationSummary>*@
                     <div class="form-group">
                         <label for="taskName">Task Name</label>
                         <input type="hidden" @bind-value="@TaskObjec.Id" />
                         <InputText id="name" class="form-control" @bind-Value="@TaskObjec.Name"></InputText>
+                        <ValidationMessage For="@(() => TaskObjec.Name)"></ValidationMessage>
                     </div>
                     <div class="form-group">
                         <label for="status">Status</label>
-                     <InputSelect  id="Summary" class="form-control" @bind-Value="@TaskObjec.Status">
-                         <option value="">Select Status</option>
-                         @foreach (var status in TaskStatusList)
-                         {
-                             <option value="@status">@status</option>
-                         }
-                     </InputSelect>
+                        <InputSelect id="Summary" class="form-control" @bind-Value="@TaskObjec.Status">
+                            <option value="">Select Status</option>
+                            @foreach (var status in TaskStatusList)
+                            {
+                                <option value="@status">@status</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => TaskObjec.Status)"></ValidationMessage>
                     </div>
                     <div class="form-group">
                         <label for="DueDate">Due Date</label>
                         <InputDate id="addition" name="math" @bind-Value="@TaskObjec.DueDate"></InputDate>
+                        <ValidationMessage For="@(() => TaskObjec.DueDate)"></ValidationMessage>
                     </div>
-                    @*<button type="submit" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>*@
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
                 </EditForm>
             </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-success">Save</button>
-                <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
-            </div>
+            @*<div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
+                </div>*@
         </div>
     </div>
 </div>
 
 @code {
 
-    [Parameter] public  ToDo TaskObjec { get; set; }
-    List<string> TaskStatusList = new List<string>() {"New", "In Progress", "Completed" };
+    [Parameter] public ToDo TaskObjec { get; set; }
+    [Parameter] public Action DataChange { get; set; }
+   
+    List<string> TaskStatusList = new List<string>() { "New", "In Progress", "Completed" };
 
     private async void HandleValidSubmit()
     {
-
+        await HttpClient.PostJsonAsync("https://localhost:44325/todos/", TaskObjec);
+        await CloseTaskModal();
+        DataChange?.Invoke();
     }
 
+    private async Task CloseTaskModal()
+    {
+        await JS.InvokeAsync<object>("CloseModal", "taskModal");
+    }
 }

@@ -4,11 +4,13 @@
 <p><em>This component demostrates fetching data from Database.</em></p>
 
 <div class="mb-2">
-<button type="button" data-toggle="modal" data-target="#taskModal" class="btn btn-primary"
-        @onclick="@InitializeTaskObject">Add Task</button>
+    <button type="button" data-toggle="modal" data-target="#taskModal" class="btn btn-primary"
+            @onclick="@InitializeTaskObject">
+        Add Task
+    </button>
 </div>
 
-<TaskDetail TaskObjec="taskObject"></TaskDetail>
+<TaskDetail TaskObjec="taskObject" DataChange="DataChanged"></TaskDetail>
 
 @if (toDoList == null)
 {
@@ -46,7 +48,7 @@ else
     List<ToDo> toDoList;
     ToDo taskObject = new ToDo();
 
-    protected async override  Task OnInitializedAsync()
+    protected async override Task OnInitializedAsync()
     {
         toDoList = await HttpClient.GetJsonAsync<List<ToDo>>("https://localhost:44325/todos/");
     }
@@ -55,6 +57,13 @@ else
     {
         taskObject = new ToDo();
         taskObject.DueDate = DateTime.Now;
+    }
+
+    private async void DataChanged()
+    {
+        toDoList = await HttpClient.GetJsonAsync<List<ToDo>>("https://localhost:44325/todos/");
+        StateHasChanged();
+
     }
 
 
