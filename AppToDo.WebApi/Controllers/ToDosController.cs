@@ -27,7 +27,7 @@ namespace AppToDo.WebApi.Controllers
         public async Task<List<ToDo>> GetAll() => await _toDoListService.GetAll();
         
         [HttpPost]
-        public async Task<ToDo> Post(ToDo toDo)
+        public async Task<ToDo> Post([FromBody]ToDo toDo)
         {
             if (ModelState.IsValid)
             {
@@ -37,6 +37,16 @@ namespace AppToDo.WebApi.Controllers
 
             return null;
 
+        }
+
+        public async Task<ToDo> Put([FromBody] ToDo toDo)
+        {
+            if (ModelState.IsValid)
+            {
+                return await _toDoListService.Update(toDo);
+            }
+
+            return null;
         }
     }
 }

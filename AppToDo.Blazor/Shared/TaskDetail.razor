@@ -49,12 +49,22 @@
 
     [Parameter] public ToDo TaskObjec { get; set; }
     [Parameter] public Action DataChange { get; set; }
-   
+
     List<string> TaskStatusList = new List<string>() { "New", "In Progress", "Completed" };
 
     private async void HandleValidSubmit()
     {
-        await HttpClient.PostJsonAsync("https://localhost:44325/todos/", TaskObjec);
+        if (TaskObjec.Id == 0)
+        {
+            await HttpClient.PostJsonAsync("https://localhost:44325/todos/", TaskObjec);
+
+        }
+        else
+        {
+            await HttpClient.PutJsonAsync("https://localhost:44325/todos/", TaskObjec);
+
+        }
+
         await CloseTaskModal();
         DataChange?.Invoke();
     }
