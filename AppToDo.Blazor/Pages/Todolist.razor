@@ -5,11 +5,11 @@
 
 <div class="mb-2">
     <button type="button" data-toggle="modal" data-target="#taskModal" class="btn btn-primary"
-            @onclick="@InitializeTaskObject">
-        Add Task
+            @onclick="@InitializeTaskObject"><span class="oi oi-plus"></span> Add Task
     </button>
 </div>
 
+<ConfirmDialog OnClick="@Delete"></ConfirmDialog>
 <TaskDetail TaskObjec="taskObject" DataChange="DataChanged">
     <CustomHeader>@customHeader</CustomHeader>
 </TaskDetail>
@@ -37,8 +37,8 @@ else
                     <td>@todo.Name</td>
                     <td>@todo.Status</td>
                     <td>@todo.DueDate.ToShortDateString()</td>
-                    <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#taskModal" @onclick="@(() => PrepareForEdit(todo))">Edit</button></td>
-                    <td><button type="button" class="btn btn-danger">Delete</button></td>
+                    <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#taskModal" @onclick="@(() => PrepareForEdit(todo))" title="Edit"><span class="oi oi-pencil"></span></button></td>
+                    <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal" @onclick="@(() => PrepareForDelete(todo))" title="Delete"><span class="oi oi-trash"></span></button></td>
                 </tr>
             }
         </tbody>
@@ -74,6 +74,20 @@ else
     {
         customHeader = "Edit Task";
         taskObject = toDo;
+    }
+
+    private void PrepareForDelete(ToDo toDo)
+    {
+        taskObject = toDo;
+    }
+
+    private async Task Delete()
+    {
+        var task = await HttpClient.DeleteAsync($"https://localhost:44325/todos/{taskObject.Id}");
+        await JS.InvokeAsync<object>("CloseModal", "confirmDeleteModal");
+        toDoList = await HttpClient.GetJsonAsync<List<ToDo>>("https://localhost:44325/todos/");
+        taskObject = new ToDo();
+
     }
 
 

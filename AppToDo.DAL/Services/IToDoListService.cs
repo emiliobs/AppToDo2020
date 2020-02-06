@@ -12,6 +12,6 @@ namespace AppToDo.DAL.Services
         Task<ToDo> GetById(int id);
         Task<ToDo> Add(ToDo toDo);
         Task<ToDo> Update(ToDo toDo);
-        Task<ToDo> Delete(ToDo id);
+        Task<ToDo> Delete(int id);
     }
 }

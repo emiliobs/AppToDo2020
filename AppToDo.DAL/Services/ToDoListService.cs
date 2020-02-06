@@ -35,7 +35,7 @@ namespace AppToDo.DAL.Services
             return toDo;
         }
 
-        public async Task<ToDo> Delete(ToDo id)
+        public async Task<ToDo> Delete(int id)
         {
             var toDo = await _contex.ToDos.FindAsync(id);
             _contex.ToDos.Remove(toDo);

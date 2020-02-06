@@ -48,5 +48,19 @@ namespace AppToDo.WebApi.Controllers
 
             return null;
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ToDo> Delete(int id)
+        {
+            //var task = await _toDoListService.GetById(id);
+            //if (task == null)
+            //{
+            //    return null;
+            //}
+
+            return await _toDoListService.Delete(id);
+            
+
+        }
     }
 }
