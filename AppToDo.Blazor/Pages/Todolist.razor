@@ -1,0 +1,62 @@
+﻿@page "/Todolist"
+
+<h1>To Do List</h1>
+<p><em>This component demostrates fetching data from Database.</em></p>
+
+<div class="mb-2">
+<button type="button" data-toggle="modal" data-target="#taskModal" class="btn btn-primary"
+        @onclick="@InitializeTaskObject">Add Task</button>
+</div>
+
+<TaskDetail TaskObjec="taskObject"></TaskDetail>
+
+@if (toDoList == null)
+{
+    <h3><em>Loading.....</em></h3>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Task</th>
+                <th>Status</th>
+                <th>Due Date</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var todo in toDoList)
+            {
+                <tr>
+                    <td>@todo.Name</td>
+                    <td>@todo.Status</td>
+                    <td>@todo.DueDate.ToShortDateString()</td>
+                    <td><button type="button" class="btn btn-info">Edit</button></td>
+                    <td><button type="button" class="btn btn-danger">Delete</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    List<ToDo> toDoList;
+    ToDo taskObject = new ToDo();
+
+    protected async override  Task OnInitializedAsync()
+    {
+        toDoList = await HttpClient.GetJsonAsync<List<ToDo>>("https://localhost:44325/todos/");
+    }
+
+    private void InitializeTaskObject()
+    {
+        taskObject = new ToDo();
+        taskObject.DueDate = DateTime.Now;
+    }
+
+
+
+}

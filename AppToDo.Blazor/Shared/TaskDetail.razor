@@ -1,0 +1,53 @@
+﻿<div class="modal" tabindex="-1" role="dialog" id="taskModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Task Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@TaskObjec" OnValidSubmit="@HandleValidSubmit">
+                    <div class="form-group">
+                        <label for="taskName">Task Name</label>
+                        <input type="hidden" @bind-value="@TaskObjec.Id" />
+                        <InputText id="name" class="form-control" @bind-Value="@TaskObjec.Name"></InputText>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                     <InputSelect  id="Summary" class="form-control" @bind-Value="@TaskObjec.Status">
+                         <option value="">Select Status</option>
+                         @foreach (var status in TaskStatusList)
+                         {
+                             <option value="@status">@status</option>
+                         }
+                     </InputSelect>
+                    </div>
+                    <div class="form-group">
+                        <label for="DueDate">Due Date</label>
+                        <InputDate id="addition" name="math" @bind-Value="@TaskObjec.DueDate"></InputDate>
+                    </div>
+                    @*<button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>*@
+                </EditForm>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Save</button>
+                <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter] public  ToDo TaskObjec { get; set; }
+    List<string> TaskStatusList = new List<string>() {"New", "In Progress", "Completed" };
+
+    private async void HandleValidSubmit()
+    {
+
+    }
+
+}
